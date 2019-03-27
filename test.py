@@ -3,9 +3,11 @@ from PyQt5 import QtWidgets, QtCore
 from gui import *
 
 from random import shuffle
-import collections
+import operator
+from datetime import datetime
 
 words = {}
+records = {}
 
 def alert(message):
     if message:
@@ -96,7 +98,8 @@ class Game():
         self.curNum = 0
         self.wordCount = len(words)
         self.gen = self.wordGenerator(words)
-        self.ui.score.setText(str(self.score))
+        self.ui.score.setText(str(self.score)+'점')
+        self.ui.answerEdit.clear()
         self.changeWord()
 
     def wordGenerator(self, words):
@@ -109,20 +112,25 @@ class Game():
         userAnswer = self.ui.answerEdit.text().strip()
         if userAnswer == words[self.curEng]:
             self.score += 5
-            self.comboCount +=1
-            self.ui.score.setText(str(self.score))
+            self.comboCount +=2
+            self.ui.score.setText(str(self.score)+'점')
         else:
             self.wrongs.append(self.curEng)
         
-        if self.comboCount == 10:
+        if self.comboCount > 1:
+            self.ui.combo.setText('COMBO\n+10')
             self.comboAnim()
             self.comboCount = 0
+            print('no')
+            self.ui.combo.setText('')
         self.ui.answerEdit.clear()
+        
         if self.curNum <= self.wordCount-1:
             self.changeWord()
         else:
             wrongWords = [wrong+':'+words[wrong] for wrong in self.wrongs]
             alert(str(self.score)+'점입니다.\n-------------\n'+'\n'.join(wrongWords))
+            records[datetime.now().strftime('%m-%d(%H:%M:%S)')] = self.score
             self.reset()
 
 
@@ -130,41 +138,67 @@ class Game():
         self.curEng = next(self.gen)
         self.curKor = words[self.curEng]
         self.ui.wordScreen_3.setText(self.curEng)
-        self.ui.status_3.setText(str(self.curNum+1)+'/'+str(self.wordCount))
+        self.ui.status_3.setText('('+str(self.curNum+1)+'/'+str(self.wordCount)+')')
         self.curNum+=1
 
     def comboAnim(self):
-        self.ui.combo.setChecked(True)
+        print(self.ui.combo.text())
         self.anim = QtCore.QPropertyAnimation(self.ui.combo, b"geometry")
-        self.anim.setDuration(500)
-        self.anim.setStartValue(QtCore.QRect(215, 15, 75, 77))
-        self.anim.setEndValue(QtCore.QRect(220, 10, 75, 77))
+        self.anim.setDuration(150)
+        self.anim.setStartValue(QtCore.QRect(215, 25, 71, 41))
+        self.anim.setEndValue(QtCore.QRect(220, 20, 71, 41))
         self.anim.start()
+        print('done')
 
 
 class Record:
+
     def __init__(self, ui):
-        pass
+        self.ui = ui
+    
+    def showRecord(self):
+        print(records)
+        if records:
+            while self.ui.recordTable.rowCount() > 0:
+                self.ui.recordTable.removeRow(0)
+            self.record = sorted(records.items(), key=operator.itemgetter(1))
+            for r in self.record:
+                rowPosition = self.ui.recordTable.rowCount()
+                self.ui.recordTable.insertRow(rowPosition)
+                self.ui.recordTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(r[1])))
+                self.ui.recordTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(r[0]))
 
 
 
 class WordMaster(Enroll, Memorize, Game, Record):
     def __init__(self, ui):
         self.readWords()
+        self.readRecords()
         self.enroll = Enroll(ui)
         self.memorize = Memorize(ui)
         self.game = Game(ui)
-        self.Record = Record(ui)
+        self.record = Record(ui)
         ui.enrollButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(1))
         ui.memorizeButton.clicked.connect(self.memorize.reset)
         ui.memorizeButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(2))
         ui.gameButton.clicked.connect(self.game.reset)
         ui.gameButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(3))
 
-        backButtonList = [ui.backButton_1, ui.backButton_2, ui.backButton_3]
+        backButtonList = [ui.backButton_1, ui.backButton_2, ui.backButton_3, ui.backButton_4]
         for backButton in backButtonList:
             backButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(0))
-        #ui.recordButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(4))
+        ui.recordButton.clicked.connect(self.record.showRecord)
+        ui.recordButton.clicked.connect(lambda : ui.stackedWidget.setCurrentIndex(4))
+
+    def readRecords(self):
+        with open(r'records.txt', 'r', encoding='utf8') as t:
+            while True:
+                line = t.readline()
+                if line:
+                    time, score = line.strip().split()
+                    records[time] = int(score)
+                else:
+                    break
 
     
     def readWords(self):
@@ -182,8 +216,14 @@ class WordMaster(Enroll, Memorize, Game, Record):
             for eng, kor in words.items():
                 t.write(eng+' '+kor+'\n')
 
+    def saveRecord(self):
+        with open(r'records.txt','a', encoding='utf8') as t:
+            for time, score in records.items():
+                t.write(time+' '+str(score)+'\n')
+
     def quit(self):
         self.saveWords()
+        self.saveRecord()
 
 
 if __name__ == '__main__':
