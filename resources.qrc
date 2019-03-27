@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="img">
+    <file>bg.png</file>
+    <file>face.png</file>
     <file>wow.jpg</file>
   </qresource>
 </RCC>
