@@ -33,3 +33,4 @@ insect 곤충
 jewel 보석
 joke 농담
 journey 여행
+zero 영

@@ -5,6 +5,7 @@ from gui import *
 from random import shuffle
 import operator
 from datetime import datetime
+import time
 
 words = {}
 records = {}
@@ -116,13 +117,7 @@ class Game():
             self.ui.score.setText(str(self.score)+'점')
         else:
             self.wrongs.append(self.curEng)
-        
-        if self.comboCount > 1:
-            self.ui.combo.setText('COMBO\n+10')
-            self.comboAnim()
-            self.comboCount = 0
-            print('no')
-            self.ui.combo.setText('')
+
         self.ui.answerEdit.clear()
         
         if self.curNum <= self.wordCount-1:
@@ -133,7 +128,6 @@ class Game():
             records[datetime.now().strftime('%m-%d(%H:%M:%S)')] = self.score
             self.reset()
 
-
     def changeWord(self):
         self.curEng = next(self.gen)
         self.curKor = words[self.curEng]
@@ -141,14 +135,6 @@ class Game():
         self.ui.status_3.setText('('+str(self.curNum+1)+'/'+str(self.wordCount)+')')
         self.curNum+=1
 
-    def comboAnim(self):
-        print(self.ui.combo.text())
-        self.anim = QtCore.QPropertyAnimation(self.ui.combo, b"geometry")
-        self.anim.setDuration(150)
-        self.anim.setStartValue(QtCore.QRect(215, 25, 71, 41))
-        self.anim.setEndValue(QtCore.QRect(220, 20, 71, 41))
-        self.anim.start()
-        print('done')
 
 
 class Record:
@@ -161,7 +147,8 @@ class Record:
         if records:
             while self.ui.recordTable.rowCount() > 0:
                 self.ui.recordTable.removeRow(0)
-            self.record = sorted(records.items(), key=operator.itemgetter(1))
+            self.record = sorted(records.items(), key=operator.itemgetter(1), reverse=True)
+            print(self.record)
             for r in self.record:
                 rowPosition = self.ui.recordTable.rowCount()
                 self.ui.recordTable.insertRow(rowPosition)

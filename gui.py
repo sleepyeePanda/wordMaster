@@ -422,17 +422,6 @@ class Ui_MainWindow(object):
 "border:2px solid rgb(70,70,70);\n"
 "border-radius:12px")
         self.enterButton_3.setObjectName("enterButton_3")
-        self.combo = QtWidgets.QLabel(self.page)
-        self.combo.setGeometry(QtCore.QRect(210, 30, 71, 41))
-        font = QtGui.QFont()
-        font.setFamily("나눔스퀘어 Bold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.combo.setFont(font)
-        self.combo.setStyleSheet("color:white")
-        self.combo.setAlignment(QtCore.Qt.AlignCenter)
-        self.combo.setObjectName("combo")
         self.stackedWidget.addWidget(self.page)
         self.page_4 = QtWidgets.QWidget()
         self.page_4.setObjectName("page_4")
@@ -508,7 +497,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -536,7 +525,6 @@ class Ui_MainWindow(object):
         self.status_3.setText(_translate("MainWindow", "(00/00)"))
         self.backButton_3.setText(_translate("MainWindow", "<"))
         self.enterButton_3.setText(_translate("MainWindow", "입력"))
-        self.combo.setText(_translate("MainWindow", "aaaaa"))
         item = self.recordTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "점수"))
         item = self.recordTable.horizontalHeaderItem(1)

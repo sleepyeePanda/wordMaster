@@ -42,7 +42,7 @@
      <string notr="true">background:transparent</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_main">
      <widget class="QPushButton" name="enrollButton">
@@ -869,33 +869,6 @@ border-radius:12px</string>
       </property>
       <property name="text">
        <string>입력</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="combo">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>30</y>
-        <width>71</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>나눔스퀘어 Bold</family>
-        <pointsize>14</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color:white</string>
-      </property>
-      <property name="text">
-       <string>aaaaa</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
