@@ -34,3 +34,5 @@ jewel 보석
 joke 농담
 journey 여행
 zero 영
+cat 고양이
+zoo 동물원

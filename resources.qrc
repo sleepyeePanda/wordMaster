@@ -1,9 +1,5 @@
 <RCC>
   <qresource prefix="img">
-    <file>face.png</file>
     <file>bg.png</file>
-    <file>left.png</file>
-    <file>right.png</file>
-    <file>back.png</file>
   </qresource>
 </RCC>
